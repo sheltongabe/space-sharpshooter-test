@@ -1,0 +1,10 @@
+# Editor
+.vscode/
+
+# Armory Build Directories
+build/
+build_game/
+khafile.js
+
+# Blender Backup
+*.blend1
