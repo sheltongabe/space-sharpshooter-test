@@ -42,6 +42,10 @@ class KeyboardDriver {
 		for(key in this.keyIndex.keys()) {
 			this.keyIndex[key] = this.keyboard.down(key);
 		}
+
+		// Check if escape is pressed, and if so show the mouse
+		if(this.isPressed(KeyboardDriver.ESCAPE))
+			InputDriver.mouse.escapePressed();
 	}
 
 	/**

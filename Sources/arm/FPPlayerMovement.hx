@@ -52,8 +52,9 @@ class FPPlayerMovement extends iron.Trait {
  	 * @brief	Apply the forces to the object in the direction requested
 	 */
 	public function update() {
-		// Update the keyboard index
+		// Update the input devices
 		InputDriver.keyboard.update();
+		InputDriver.mouse.update();
 
 		// Make sure the body is ready
 		if(!body.ready)
