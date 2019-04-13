@@ -5,7 +5,8 @@ import iron.system.Input;
 import armory.trait.physics.bullet.RigidBody;
 import iron.object.Object;
 import iron.object.CameraObject;
-import armory.trait.physics.PhysicsWorld;
+
+import arm.KeyboardDriver;
 
 enum Action {
 	FORWARD;
@@ -23,6 +24,9 @@ class FPPlayerMovement extends iron.Trait {
 
 	/// Rigid body for the player object
 	var body:RigidBody;
+
+	/// KeyboardDriver
+	var keyboard:KeyboardDriver;
 
 	/// Constructor
 	public function new() {
@@ -42,12 +46,16 @@ class FPPlayerMovement extends iron.Trait {
 
 		this.camera = object.getChildOfType(CameraObject);
 		this.body = object.getTrait(RigidBody);
+		this.keyboard = new KeyboardDriver();
 	}
 
 	/**
  	 * @brief	Apply the forces to the object in the direction requested
 	 */
 	public function update() {
+		// Update the keyboard index
+		this.keyboard.update();
+
 		// Make sure the body is ready
 		if(!body.ready)
 			return;
@@ -106,15 +114,14 @@ class FPPlayerMovement extends iron.Trait {
 	 */
 	private function getKeyActions():Array<Action> {
 		var actions:Array<Action> = new Array<Action>();
-		var keyboard:Keyboard = Input.getKeyboard();
 
-		if(keyboard.down("w"))
+		if(keyboard.isPressed("w"))
 			actions.push(FORWARD);
-		if(keyboard.down("s"))
+		if(keyboard.isPressed("s"))
 			actions.push(BACKWARD);
-		if(keyboard.down("a"))
+		if(keyboard.isPressed("a"))
 			actions.push(STRAFE_LEFT);
-		if(keyboard.down("d"))
+		if(keyboard.isPressed("d"))
 			actions.push(STRAFE_RIGHT);
 
 		return actions;
