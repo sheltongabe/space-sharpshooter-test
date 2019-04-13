@@ -6,7 +6,7 @@ import armory.trait.physics.bullet.RigidBody;
 import iron.object.Object;
 import iron.object.CameraObject;
 
-import arm.KeyboardDriver;
+import arm.InputDriver;
 
 enum Action {
 	FORWARD;
@@ -24,9 +24,6 @@ class FPPlayerMovement extends iron.Trait {
 
 	/// Rigid body for the player object
 	var body:RigidBody;
-
-	/// KeyboardDriver
-	var keyboard:KeyboardDriver;
 
 	/// Constructor
 	public function new() {
@@ -46,7 +43,9 @@ class FPPlayerMovement extends iron.Trait {
 
 		this.camera = object.getChildOfType(CameraObject);
 		this.body = object.getTrait(RigidBody);
-		this.keyboard = new KeyboardDriver();
+
+		// If the Input devices have not been initialized yet, initialize them
+		InputDriver.init();
 	}
 
 	/**
@@ -54,7 +53,7 @@ class FPPlayerMovement extends iron.Trait {
 	 */
 	public function update() {
 		// Update the keyboard index
-		this.keyboard.update();
+		InputDriver.keyboard.update();
 
 		// Make sure the body is ready
 		if(!body.ready)
@@ -99,8 +98,6 @@ class FPPlayerMovement extends iron.Trait {
 		var dx = mouse.movementX;
 		var dy = mouse.movementY;
 
-		trace("dx: " + dx + "  |  dy: " + dy);
-
 		camera.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
 		object.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
 		camera.transform.rotate(Vec4.yAxis(), dy * object.properties["MOUSE_SCALE"]);
@@ -114,6 +111,7 @@ class FPPlayerMovement extends iron.Trait {
 	 */
 	private function getKeyActions():Array<Action> {
 		var actions:Array<Action> = new Array<Action>();
+		var keyboard = InputDriver.keyboard;
 
 		if(keyboard.isPressed("w"))
 			actions.push(FORWARD);
