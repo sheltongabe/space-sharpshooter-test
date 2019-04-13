@@ -54,7 +54,8 @@ class FPPlayerMovement extends iron.Trait {
 		
 		// Update properties
 		this.appliedForce = object.properties["APPLY_FORCE"];
-
+		
+		body.activate();
 		// Apply Movement Forces
 		var actions:Array<Action> = this.getKeyActions();
 		for(action in actions) {
@@ -78,7 +79,10 @@ class FPPlayerMovement extends iron.Trait {
 		}
 
 		// Sync the transformations made between the physics and transformation matrix
+		body.setAngularFactor(0, 0, 0);
 		body.syncTransform();
+
+		this.Aim();
 	}
 
 	/// Change Direction with mouse input
@@ -87,6 +91,13 @@ class FPPlayerMovement extends iron.Trait {
 		var dx = mouse.movementX;
 		var dy = mouse.movementY;
 
+		trace("dx: " + dx + "  |  dy: " + dy);
+
+		camera.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
+		object.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
+		camera.transform.rotate(Vec4.yAxis(), dy * object.properties["MOUSE_SCALE"]);
+		
+		body.syncTransform();
 	}
 
 	/**
