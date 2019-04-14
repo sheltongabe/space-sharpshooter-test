@@ -43,6 +43,9 @@ class FPPlayerMovement extends iron.Trait {
 
 		this.camera = object.getChildOfType(CameraObject);
 		this.body = object.getTrait(RigidBody);
+		body.notifyOnInit(function() {
+			body.setGravity(new Vec4(0, 0, -4.9));
+		});
 
 		// If the Input devices have not been initialized yet, initialize them
 		InputDriver.init();
@@ -60,30 +63,42 @@ class FPPlayerMovement extends iron.Trait {
 		if(!body.ready)
 			return;
 		
+		// Jump if needed
+		if(object.properties["jump"]) {
+			this.body.applyImpulse(new Vec4(0, 0, 8));
+			object.properties["jump"] = false;
+		}
+
 		// Update properties
 		this.appliedForce = object.properties["APPLY_FORCE"];
 		
-		body.activate();
+		//body.activate();
 		// Apply Movement Forces
+		var dir:Vec4 = new Vec4();
 		var actions:Array<Action> = this.getKeyActions();
 		for(action in actions) {
 			switch(action) {
 				case FORWARD:
-					body.applyForce(new Vec4(0.0, this.appliedForce));
+					dir.add(object.transform.look());
 					break;
 
 				case BACKWARD:
-					body.applyForce(new Vec4(0.0, -this.appliedForce));
+					dir.add(object.transform.look().mult(-1));
 					break;
 
 				case STRAFE_LEFT:
-					body.applyForce(new Vec4(-this.appliedForce));
+					dir.add(object.transform.right().mult(-1));
 					break;
 
 				case STRAFE_RIGHT:
-					body.applyForce(new Vec4(this.appliedForce));
+					dir.add(object.transform.right());
 					break;
 			}
+		}
+		// Make sure the max speed is not exceeded
+		if(body.getLinearVelocity().length() < object.properties["MAX_VEL"]) {
+			dir.mult(this.appliedForce);
+			body.applyForce(dir);
 		}
 
 		// Sync the transformations made between the physics and transformation matrix
@@ -104,11 +119,12 @@ class FPPlayerMovement extends iron.Trait {
 		var dy = mouse.movementY;
 
 		// Compute local x axis, by reflecting the x-coordinate
-		var localX:Vec4 = object.transform.look().applyAxisAngle(Vec4.zAxis(), 3.14 / 2.0);
+		//var localX:Vec4 = object.transform.look().applyAxisAngle(Vec4.zAxis(), 3.14 / 2.0);
 
 		camera.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
 		object.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
-		camera.transform.rotate(localX, dy * object.properties["MOUSE_SCALE"]);
+		camera.transform.rotate(object.transform.right().mult(-1),
+			dy * object.properties["MOUSE_SCALE"]);
 		
 		body.syncTransform();
 	}
