@@ -95,13 +95,20 @@ class FPPlayerMovement extends iron.Trait {
 
 	/// Change Direction with mouse input
 	private function Aim() {
+		// If the mouse is not hidden return
+		if(!InputDriver.mouse.hidden())
+			return;
+
 		var mouse:iron.system.Input.Mouse = Input.getMouse();
 		var dx = mouse.movementX;
 		var dy = mouse.movementY;
 
+		// Compute local x axis, by reflecting the x-coordinate
+		var localX:Vec4 = object.transform.look().applyAxisAngle(Vec4.zAxis(), 3.14 / 2.0);
+
 		camera.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
 		object.transform.rotate(Vec4.zAxis(), -dx * object.properties["MOUSE_SCALE"]);
-		camera.transform.rotate(Vec4.yAxis(), dy * object.properties["MOUSE_SCALE"]);
+		camera.transform.rotate(localX, dy * object.properties["MOUSE_SCALE"]);
 		
 		body.syncTransform();
 	}

@@ -63,6 +63,11 @@ class MouseDriver {
 		return this.mouseIndex[button];
 	}
 
+	/// Is the cursor hidden
+	public function hidden():Bool {
+		return this.isHidden;
+	}
+
 	/// Hide the mouse
 	public function hideCursor() {
 		this.mouse.hide();
