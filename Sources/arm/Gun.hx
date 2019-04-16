@@ -1,6 +1,7 @@
 package arm;
 
-import iron.math.Mat4;
+import iron.object.Transform;
+import iron.math.Quat;
 import iron.math.Vec4;
 import iron.Scene;
 import iron.object.Object;
@@ -35,15 +36,17 @@ class Gun extends iron.Trait {
 
 	/// Spawn and propel a laser
 	private function shoot() {
-		var direction:Vec4 = object.transform.look().normalize();
-		direction.mult(0.5);
-		var respawnLoc:Vec4 = Scene.active.getChild("Laser Spawn").transform.loc;
-		trace("Gun: " + respawnLoc);
+		var direction:Quat = object.transform.rot;
+		var gunLoc:Vec4 = object.transform.loc;
+		var spawnLoc:Transform = Scene.active.getChild("Laser Spawn").transform;
+		trace("Gun: " + spawnLoc.loc);
 
 		Scene.active.spawnObject("Laser", null, function(o:Object) {
-			
-			o.transform.rotate(Vec4.yAxis(), Math.PI / 2);
-			o.transform.loc.add(respawnLoc);
+			o.transform.loc.x = spawnLoc.worldx();
+			o.transform.loc.y = spawnLoc.worldy();
+			o.transform.loc.z = spawnLoc.worldz();
+
+			// o.transform.loc.add(respawnLoc);
 			o.transform.buildMatrix();
 			o.visible = true;
 			trace("Laser" + o.transform.loc);
