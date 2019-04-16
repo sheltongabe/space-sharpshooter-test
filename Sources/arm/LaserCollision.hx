@@ -33,9 +33,11 @@ class LaserCollision extends iron.Trait {
 
 		// Check if a target was hit
 		for(contact in contacts) {
-			if(contact.name == "Target") {
+			if(contact.transform.object.name == "Target") {
+				object.properties["NUM_HIT"] = object.properties["NUM_HIT"] + 1;
 				LaserCollision.NUM_HITS += 1;
 				trace(LaserCollision.NUM_HITS);
+				object.remove();
 			}
 		}
 	}
