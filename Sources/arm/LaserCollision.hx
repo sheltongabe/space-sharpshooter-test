@@ -5,9 +5,6 @@ import armory.trait.physics.RigidBody;
 import armory.trait.physics.PhysicsWorld;
 
 class LaserCollision extends iron.Trait {
-	/// Number of collisions with targets
-	public static var NUM_HITS:Int = 0;
-
 	/// This bullets rigid body
 	var body:RigidBody;
 
@@ -33,9 +30,9 @@ class LaserCollision extends iron.Trait {
 
 		// Check if a target was hit
 		for(contact in contacts) {
-			if(contact.name == "Target") {
-				LaserCollision.NUM_HITS += 1;
-				trace(LaserCollision.NUM_HITS);
+			if(contact.transform.object.name == "Target") {
+				//object.properties["NUM_COL"] += 1;
+				object.remove();
 			}
 		}
 	}
