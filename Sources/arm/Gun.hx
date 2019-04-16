@@ -6,12 +6,20 @@ import iron.math.Vec4;
 import iron.Scene;
 import iron.object.Object;
 import arm.InputDriver;
+import armory.trait.physics.bullet.RigidBody;
+import iron.system.Time;
 
 /**
  * @class 	Gun
  * @brief	Handle spawning Laser's and propeling them forward
  */
 class Gun extends iron.Trait {
+	/// The time of the last shot
+	var time:Float;
+
+	/// Interval for shot
+	var SHOT_INTERVAL:Float = 0.5;
+
 	/// Constructor
 	public function new() {
 		super();
@@ -23,15 +31,21 @@ class Gun extends iron.Trait {
 	public function init() {
 		notifyOnUpdate(update);
 		notifyOnRemove(kill);
+		this.time = Time.realTime();
 	}
 
 	/// Update each frame
 	public function update() {
 		var mouse = InputDriver.mouse;
+		trace("Time: " + Time.realTime());
 
 		// If the left mouse button is clicked and the cursor is hidden
-		if(mouse.hidden() && mouse.isPressed("left"))
-			this.shoot();
+		if(mouse.hidden() && mouse.isPressed("left")) {
+			if(Time.realTime() - this.time > this.SHOT_INTERVAL) {
+				this.time = Time.realTime();
+				this.shoot();
+			}
+		}
 	}
 
 	/// Spawn and propel a laser
@@ -39,17 +53,23 @@ class Gun extends iron.Trait {
 		var direction:Quat = object.transform.rot;
 		var gunLoc:Vec4 = object.transform.loc;
 		var spawnLoc:Transform = Scene.active.getChild("Laser Spawn").transform;
-		trace("Gun: " + spawnLoc.loc);
 
 		Scene.active.spawnObject("Laser", null, function(o:Object) {
+			var body = o.getTrait(RigidBody);
+			//var look:Vec4 = object.parent.parent.transform.look();
+
 			o.transform.loc.x = spawnLoc.worldx();
 			o.transform.loc.y = spawnLoc.worldy();
 			o.transform.loc.z = spawnLoc.worldz();
 
-			// o.transform.loc.add(respawnLoc);
 			o.transform.buildMatrix();
+			body.syncTransform();
 			o.visible = true;
-			trace("Laser" + o.transform.loc);
+			body.disableGravity();
+
+			var look:Vec4 = o.transform.up().mult(-1);
+			var firingStrength:Float = object.properties["SHOOT_VEL"];
+			body.setLinearVelocity(look.x * firingStrength, look.y * firingStrength, look.z * firingStrength);
 		});
 	}
 
