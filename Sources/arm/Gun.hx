@@ -37,7 +37,6 @@ class Gun extends iron.Trait {
 	/// Update each frame
 	public function update() {
 		var mouse = InputDriver.mouse;
-		trace("Time: " + Time.realTime());
 
 		// If the left mouse button is clicked and the cursor is hidden
 		if(mouse.hidden() && mouse.isPressed("left")) {
