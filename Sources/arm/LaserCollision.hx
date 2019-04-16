@@ -1,5 +1,6 @@
 package arm;
 
+import iron.Scene;
 import armory.trait.physics.RigidBody;
 import armory.trait.physics.PhysicsWorld;
 
@@ -26,6 +27,7 @@ class LaserCollision extends iron.Trait {
 		// Get collisions
 		var contacts:Array<RigidBody> = PhysicsWorld.active.getContacts(this.body);
 		
+
 		if(contacts == null)
 			return;
 
