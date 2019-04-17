@@ -1,6 +1,6 @@
 package arm;
 
-import iron.Scene;
+import arm.TargetHealth;
 import armory.trait.physics.RigidBody;
 import armory.trait.physics.PhysicsWorld;
 
@@ -34,9 +34,9 @@ class LaserCollision extends iron.Trait {
 		// Check if a target was hit
 		for(contact in contacts) {
 			if(contact.transform.object.name == "Target") {
-				object.properties["NUM_HIT"] = object.properties["NUM_HIT"] + 1;
 				LaserCollision.NUM_HITS += 1;
-				trace(LaserCollision.NUM_HITS);
+				var health = contact.transform.object.getTrait(TargetHealth);
+				health.hit(1);
 				object.remove();
 			}
 		}
