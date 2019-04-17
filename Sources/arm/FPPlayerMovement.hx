@@ -106,6 +106,8 @@ class FPPlayerMovement extends iron.Trait {
 		body.syncTransform();
 
 		this.Aim();
+		object.transform.buildMatrix();
+		camera.transform.buildMatrix();
 	}
 
 	/// Change Direction with mouse input

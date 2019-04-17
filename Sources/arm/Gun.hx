@@ -55,18 +55,21 @@ class Gun extends iron.Trait {
 
 		Scene.active.spawnObject("Laser", null, function(o:Object) {
 			var body = o.getTrait(RigidBody);
-			//var look:Vec4 = object.parent.parent.transform.look();
+			var rot:Quat = object.parent.transform.rot;
 
 			o.transform.loc.x = spawnLoc.worldx();
 			o.transform.loc.y = spawnLoc.worldy();
 			o.transform.loc.z = spawnLoc.worldz();
+			o.transform.rotate(Vec4.xAxis(), rot.x - Math.PI / 5);
+			o.transform.rotate(Vec4.yAxis(), rot.y);
+			o.transform.rotate(Vec4.zAxis(), object.parent.parent.transform.rot.z);
 
 			o.transform.buildMatrix();
 			body.syncTransform();
 			o.visible = true;
 			body.disableGravity();
 
-			var look:Vec4 = o.transform.up().mult(-1);
+			var look:Vec4 = object.parent.transform.up().mult(-1);
 			var firingStrength:Float = object.properties["SHOOT_VEL"];
 			body.setLinearVelocity(look.x * firingStrength, look.y * firingStrength, look.z * firingStrength);
 		});
