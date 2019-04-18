@@ -32,6 +32,8 @@ class Gun extends iron.Trait {
 		notifyOnUpdate(update);
 		notifyOnRemove(kill);
 		this.time = Time.realTime();
+		object.properties["can_jump"] = true;
+		object.properties["jump"] = false;
 	}
 
 	/// Update each frame
@@ -56,7 +58,6 @@ class Gun extends iron.Trait {
 		Scene.active.spawnObject("Laser", null, function(o:Object) {
 			var body = o.getTrait(RigidBody);
 			var rot:Quat = object.parent.transform.rot;
-			trace(rot);
 
 			o.transform.loc.x = spawnLoc.worldx();
 			o.transform.loc.y = spawnLoc.worldy();

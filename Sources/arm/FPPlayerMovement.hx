@@ -67,6 +67,7 @@ class FPPlayerMovement extends iron.Trait {
 		if(object.properties["jump"]) {
 			this.body.applyImpulse(new Vec4(0, 0, 8));
 			object.properties["jump"] = false;
+			trace("Jumping");
 		}
 
 		// Update properties
