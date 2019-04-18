@@ -97,7 +97,6 @@ class FPPlayerMovement extends iron.Trait {
 			}
 		}
 		// Make sure the max speed is not exceeded
-		trace(body.getLinearVelocity().length());
 		if(body.getLinearVelocity().length() < object.properties["MAX_VEL"]) {
 			dir.mult(this.appliedForce);
 			body.applyForce(dir);

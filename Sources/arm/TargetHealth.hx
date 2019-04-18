@@ -1,5 +1,7 @@
 package arm;
 
+import iron.Scene;
+
 class TargetHealth extends iron.Trait {
 	/// Health
 	var health:Float;
@@ -25,6 +27,8 @@ class TargetHealth extends iron.Trait {
 		this.health -= damage;
 		if(this.health < 0.0) {
 			object.remove();
+			Scene.active.camera.properties["targets_remaining"] = Scene.active.camera.properties["targets_remaining"] - 1;
+			
 		}
 	}
 
