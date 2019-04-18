@@ -65,7 +65,7 @@ class FPPlayerMovement extends iron.Trait {
 		
 		// Jump if needed
 		if(object.properties["jump"]) {
-			this.body.applyImpulse(new Vec4(0, 0, 8));
+			this.body.applyImpulse(new Vec4(0, 0, 6));
 			object.properties["jump"] = false;
 			trace("Jumping");
 		}
@@ -80,23 +80,24 @@ class FPPlayerMovement extends iron.Trait {
 		for(action in actions) {
 			switch(action) {
 				case FORWARD:
-					dir.add(object.transform.look());
+					dir.add(camera.transform.up().mult(-1));
 					break;
 
 				case BACKWARD:
-					dir.add(object.transform.look().mult(-1));
+					dir.add(camera.transform.up());
 					break;
 
 				case STRAFE_LEFT:
-					dir.add(object.transform.right().mult(-1));
+					dir.add(camera.transform.right().mult(-1));
 					break;
 
 				case STRAFE_RIGHT:
-					dir.add(object.transform.right());
+					dir.add(camera.transform.right());
 					break;
 			}
 		}
 		// Make sure the max speed is not exceeded
+		trace(body.getLinearVelocity().length());
 		if(body.getLinearVelocity().length() < object.properties["MAX_VEL"]) {
 			dir.mult(this.appliedForce);
 			body.applyForce(dir);
