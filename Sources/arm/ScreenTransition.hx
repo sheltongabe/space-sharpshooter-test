@@ -2,7 +2,9 @@ package arm;
 
 import iron.Scene;
 import armory.trait.internal.CanvasScript;
+
 import arm.InputDriver;
+import arm.OxygenLevel;
 
 enum ScreenState {
 	START;
@@ -39,6 +41,7 @@ class ScreenTransition extends iron.Trait {
 					goToGameState();
 			
 			case GAME:
+				ScreenTransition.canvas.getElement("txtOxygen").text = Std.string(OxygenLevel.getOxygenLevel() + "%");
 
 			case END:
 				if(InputDriver.keyboard.isPressed("p"))
@@ -71,6 +74,8 @@ class ScreenTransition extends iron.Trait {
 		// Show Game State
 		ScreenTransition.canvas.getElement("lblRemainingTargets").visible = true;
 		ScreenTransition.canvas.getElement("txtRemainingTargets").visible = true;
+		ScreenTransition.canvas.getElement("lblOxygen").visible = true;
+		ScreenTransition.canvas.getElement("txtOxygen").visible = true;
 		ScreenTransition.state = GAME;
 	}
 
@@ -81,6 +86,8 @@ class ScreenTransition extends iron.Trait {
 		// Hide Game State
 		ScreenTransition.canvas.getElement("lblRemainingTargets").visible = false;
 		ScreenTransition.canvas.getElement("txtRemainingTargets").visible = false;
+		ScreenTransition.canvas.getElement("lblOxygen").visible = false;
+		ScreenTransition.canvas.getElement("txtOxygen").visible = false;
 
 		// Show End State
 		ScreenTransition.canvas.getElement("lblRestart").visible = true;
