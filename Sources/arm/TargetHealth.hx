@@ -2,6 +2,8 @@ package arm;
 
 import iron.Scene;
 
+import arm.ScreenTransition;
+
 class TargetHealth extends iron.Trait {
 	/// Health
 	var health:Float;
@@ -9,6 +11,7 @@ class TargetHealth extends iron.Trait {
 	public function new() {
 		super();
 		notifyOnInit(init);
+		
 	}
 
 	public function init() {
@@ -16,6 +19,9 @@ class TargetHealth extends iron.Trait {
 		notifyOnRemove(kill);
 
 		this.health = Math.random() % object.properties["MAX_HEALTH"] + 1;
+		
+		// Add a target to targets remaining
+		Scene.active.camera.properties["targets_remaining"] = Scene.active.camera.properties["targets_remaining"] + 1;
 	}
 
 	public function update() {
@@ -26,9 +32,14 @@ class TargetHealth extends iron.Trait {
 	public function hit(damage:Int = 1) {
 		this.health -= damage;
 		if(this.health < 0.0) {
+			// Destroy target
 			object.remove();
 			Scene.active.camera.properties["targets_remaining"] = Scene.active.camera.properties["targets_remaining"] - 1;
 			
+			// If number of targets is 0, move to win state
+			if(Scene.active.camera.properties["targets_remaining"] == 0) {
+				ScreenTransition.gameWon();
+			}
 		}
 	}
 
