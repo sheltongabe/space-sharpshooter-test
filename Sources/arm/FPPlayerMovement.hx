@@ -7,6 +7,7 @@ import iron.object.Object;
 import iron.object.CameraObject;
 
 import arm.InputDriver;
+import arm.ScreenTransition;
 
 enum Action {
 	FORWARD;
@@ -59,6 +60,10 @@ class FPPlayerMovement extends iron.Trait {
 		InputDriver.keyboard.update();
 		InputDriver.mouse.update();
 
+		// Ensure we are in the game state
+		if(ScreenTransition.getState() != GAME)
+			return;
+
 		// Make sure the body is ready
 		if(!body.ready)
 			return;
@@ -67,7 +72,6 @@ class FPPlayerMovement extends iron.Trait {
 		if(object.properties["jump"]) {
 			this.body.applyImpulse(new Vec4(0, 0, 6));
 			object.properties["jump"] = false;
-			trace("Jumping");
 		}
 
 		// Update properties
@@ -97,7 +101,6 @@ class FPPlayerMovement extends iron.Trait {
 			}
 		}
 		// Make sure the max speed is not exceeded
-		trace(body.getLinearVelocity().length());
 		if(body.getLinearVelocity().length() < object.properties["MAX_VEL"]) {
 			dir.mult(this.appliedForce);
 			body.applyForce(dir);
