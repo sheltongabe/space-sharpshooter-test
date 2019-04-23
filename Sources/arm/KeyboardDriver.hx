@@ -33,6 +33,8 @@ class KeyboardDriver {
 			"a" => false,
 			"s" => false,
 			"d" => false,
+			"space" => false,
+			"p" => false,
 			ESCAPE => false
 		];
 	}
